@@ -2,7 +2,23 @@ module Main where
 
 import Data.Char
 
-data Lexeme = LOp String | LKeyword String
+main = do
+       putStrLn "In front of you is some spaghetti that you'd really like to cook.  What will you do?"
+       act <- getLine
+       let ans = head $ parse $ lexString $ words act
+       if ans == Cook "spaghetti"
+          then do
+               putStrLn "Congratulations, you cooked the spaghetti!"
+               putStrLn "Press enter to cook some more"
+               ans <- getLine
+               main
+          else do
+               putStrLn "I'm afraid you weren't able to cook the spaghetti"
+               putStrLn "Press enter to try again"
+               ans <- getLine
+               main
+
+data Lexeme = LOp { operation :: String} | LKeyword {word :: String}
     deriving (Show, Eq)
      
 ops = ["cook"]
@@ -24,12 +40,16 @@ testLexer = lexString $ words "I want to cook all of the spaghetti in the world!
    
 data Exp =
    Cook String |
-   Attack String
+   Meaningless String
+   deriving (Show, Eq)
    
 parse :: [Lexeme] -> [Exp] --work so that we can get the one expression we need, a cook expression with spaghetti in it
-parse [] = error "I can't do anything with this!"
-parse [_] = error "I need a bit more to go off of."
-parse beep = error "jeep"
+parse [] = [Meaningless "I can't do anything with this!"]
+parse [_] = [Meaningless "I need a bit more to go off of."]
+parse (s:ss)
+    | s == LOp "cook" && head ss == LOp "cook" = error "Gee Bill, TWO Operations?!"
+    | s == LOp "cook" = [Cook $ word $ head ss]
+    | otherwise = error "What do?"
 
    
 {-   
