@@ -1,0 +1,19 @@
+A text adventure would be more straightforward to the user, but it also incorporates more (a state machine).
+When they do an action, we look for an accompanying keyword and check how that affects the state.
+More than one keyword in one command might fly.  The user can't say "use key on door"
+Instead they would have to say "view/examine door" and then "use key," but they can do this with any amount of filler text in between.
+(we could also do compound commands I suppose, depends on how hard that is)
+
+If there is a command that we don't recognize, we say we don't understand what they're trying to do.
+If there's no recognizable keyword, we say we don't know what a "whatever they said" is.
+
+
+What iffffff we could incorporate music tracks into the game state?  Could be dope.
+
+Eitherwhos, the premise for the adventure: You arrive at a settlement called Chatshire.  You are immediately accosted by 
+
+From JP:
+Use Haskell parsing monads to get more complexity out of a sentence.  Develop a bunch of rules that you can use to interpret
+potential sentences, then you pass an incoming sentence to these rules.  These rules can rank a sentence based on how relevent they
+are to them and then the highest bidder handles the sentence.  By the end of this, we have a more flexible world that lets the user
+interact with it more than stringing them along a static story, like a good GM should do.
