@@ -18,7 +18,7 @@ main = do
                ans <- getLine
                main
 
-data Lexeme = LOp { operation :: String} | LKeyword {word :: String}
+data Lexeme = LOp { operation :: String} | LKeyword {word :: String} | LOther {unknown :: String}
     deriving (Show, Eq)
      
 ops = ["cook"]
@@ -33,7 +33,7 @@ lexString [] = []  -- No more left
 lexString inp@(c:cs)
    | c `elem` keyword = LKeyword c : lexString cs
    | c `elem` ops = LOp c : lexString cs
-   | otherwise = lexString cs
+   | otherwise = LOther c : lexString cs
 
    
 testLexer = lexString $ words "I want to cook all of the spaghetti in the world!"
@@ -47,12 +47,13 @@ parse :: [Lexeme] -> [Exp] --work so that we can get the one expression we need,
 parse [] = [Meaningless "I can't do anything with this!"]
 parse [_] = [Meaningless "I need a bit more to go off of."]
 parse (s:ss)
-    | s == LOp "cook" && head ss == LOp "cook" = error "Gee Bill, TWO Operations?!"
-    | s == LOp "cook" = [Cook $ word $ head ss]
-    | otherwise = error "What do?"
+    | s == LOp "cook" && head ss == LOp "cook" = [Meaningless "Gee Bill, TWO Operations?!"]
+    | s == LOp "cook" && head ss == LKeyword "spaghetti" = [Cook $ word $ head ss]
+    | otherwise = [Meaningless "What do?"]
 
+cookParse :: Parser Lexeme Exp
+cookParse = error " "
    
-{-   
 data Parser inp a = Parser ([inp] -> [(a, [inp])])
 
 instance Functor (Parser inp) where
@@ -87,7 +88,7 @@ tok f = Parser (\ts -> if null ts then [] else
                                       
 
 
-
+{-
 {-
 Grammar:
 idk man

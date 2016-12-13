@@ -10,7 +10,26 @@ If there's no recognizable keyword, we say we don't know what a "whatever they s
 
 What iffffff we could incorporate music tracks into the game state?  Could be dope.
 
-Eitherwhos, the premise for the adventure: You arrive at a settlement called Chatshire.  You are immediately accosted by 
+Eitherwhos, the premise for the adventure: You arrive at a settlement called Chatshire.  You are immediately accosted by an elderly
+gentleman who is panicked and asks for your help.  You immediately notice something peculiar.  Everyone here seems so chatty!  When
+you met, the sesquipedellian was describing your person.  You see, in Chatshire, you find out the status of yourself and your
+surroundings by conversation with everything in the game.  This will be the quirk of the game.  No matter what your response,
+the man whisks you away to a cave and reveals that he is actually a powerful wizard and has forseen you as the one of prohecy.
+This is, of course, followed by a description of the cave around you.  It is a magical wizard place with magical wizard things,
+chat logs scrawled on scrolls (hinting at what this game could have been), potions that you can drink, an exit, maybe more.  Either
+way, the wizard informs you that your first task is to leave the cave, and doing so transfers you to the next scene.  The wizard will
+inform you that he can communicate with you through time and space and has been watching you for a while, ever since you were born.
+He muses of your surroundings, various trees and flowers, the frollicing wildlife, the goblin coming to rob you.  This goblin is
+quite friendly at first, and even describes everything about it and its friendly gesture which is really a ploy to lower your guard
+so it can steal from you.  You have the option at this point to make a grab for the dagger behind its back (which, of course, it
+told you about) and you can take it because humans are stronger than goblins.  Failing this via the wrong action towards the goblin,
+it will stab you and try to find valuables on your person, which it won't find because you don't have anything.  Silly Goblin.  Fail
+this via the wrong action not towards the Goblin, and it will reveal its knife and threaten you for gold.  Going for the knife at
+this point will be fatal, you'll have to go the diplomatic route.  You know the Goblin has a wife whose picture he wears in the locket
+around his neck, you know this because (of course) he told you this.  Keywords about this wife or family will launch him into a sob
+story about how he's only doing this so he can feed his family.  Promising to help will net you a companion.  Should you have taken
+his dagger, you can either kill him or have him join you on your journey weaponless.  The wizard describes your trot into the distance
+and the end of this scene is the end of the demo.
 
 From JP:
 Use Haskell parsing monads to get more complexity out of a sentence.  Develop a bunch of rules that you can use to interpret
