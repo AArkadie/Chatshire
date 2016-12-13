@@ -48,11 +48,19 @@ parse [] = [Meaningless "I can't do anything with this!"]
 parse [_] = [Meaningless "I need a bit more to go off of."]
 parse (s:ss)
     | s == LOp "cook" && head ss == LOp "cook" = [Meaningless "Gee Bill, TWO Operations?!"]
+<<<<<<< HEAD
     | s == LOp "cook" && head ss == LKeyword "spaghetti" = [Cook $ word $ head ss]
     | otherwise = [Meaningless "What do?"]
 
 cookParse :: Parser Lexeme Exp
 cookParse = error " "
+=======
+    | s == LOp "cook" = [Cook $ word $ head ss]
+    | otherwise = [Meaningless "What do?"]
+
+cookParse :: Parser [Lexeme] Exp
+cookParse = error "feed me"
+>>>>>>> origin/master
    
 data Parser inp a = Parser ([inp] -> [(a, [inp])])
 
