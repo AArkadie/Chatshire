@@ -3,24 +3,31 @@ module Kitchen where
 import Data.Char
 
 data Noun = Spaghetti | Plate | Pot | Pan | Stove | Fork | Water | Sink | Cabinet | Sauce | Cheese |
-            Table
-            deriving Show
+            Table | Me | Myself | I-- | Him | Her | He | She | It
+            deriving (Show, Eq)
 
 data Verb = Cook | Throw | Grab | Put | Open | Turn | Attack | Is
-            deriving Show
+            deriving (Show, Eq)
 
 data Preposition = In | On | Around | By | To
-                   deriving Show
+                   deriving (Show, Eq)
 
 data Adjective = Delicious | Tasty | Good | Great | Bad | Okay
-                 deriving Show
+                 deriving (Show, Eq)
+                 
+data Article = The | A | An | Some deriving (Show, Eq)
 
---data NPhrase = Preposition Noun | Adjective Noun deriving Show
+--data NPhrase = Preposition Noun | Adjective Noun deriving (Show, Eq)
 
-data SFrag = SFrag Noun Verb Noun | SFrag Verb Noun Preposition Noun
-             deriving Show
+data SFrag = SFragVN { v :: Verb, n :: Noun} |
+             SFragVNPN { v ::Verb, n1 :: Noun, p :: Preposition, n2 :: Noun} |
+             SFragVArtN Verb Article Noun |
+             SFragVAdjN Verb Adjective Noun
+             deriving (Show, Eq)
 
-data WState = WState {sentences :: [SFrag], description :: String} deriving Show
+data MState = SState {cooked :: Bool, seasoned :: Bool, ruined :: Bool} deriving (Show, Eq)            
+             
+data WState = WState {sentences :: [SFrag], description :: String, mod :: MState} deriving (Show, Eq)
 
 type Stepper world sent = WState -> SFrag -> WState
 
@@ -29,10 +36,15 @@ scrubPunct sent = [x | x <- sent,  not $ elem x ",.?:;'\"-+=_!@$%&*)("]
 
 lexPrep :: String -> [String]
 lexPrep sent = words $ map toLower $ scrubPunct sent
+--------------------------------------------------------------------------------------
 
+initSpag :: WState
+initSpag = WState [] 
+                  "You stand in a kitchen.  On the counter there is a bag of spaghetti.  On the stove there is an empty pot.  On the table there is a plate with a fork on it, yearning for some delicious cooked spaghetti."
+                  $ SState False False False
+--buffer
 
-
-
+--buffer
 
 {-
 We want the input to come in, then we want the parser to see if it makes sense.
@@ -40,14 +52,17 @@ The parser extracts the relevant info to pass on to a function that finds out wh
 information means to the game and changes the state accordingly.
 -}
 
+vnReversal :: SFrag -> String
+vnReversal f = "The " ++ nn ++ " has been " ++ nv ++ "ed"
+               where nn = map toLower $ show $ n f
+                     nv = map toLower $ show $ v f
 
-
-
-
-
-
-
-
+vnpnReversal :: SFrag -> String
+vnpnReversal f = "The " ++ nn1 ++ " is " ++ np ++ " the " ++ nn2
+               where nn1 = map toLower $ show $ n1 f
+                     nn2 = map toLower $ show $ n2 f
+                     np = map toLower $ show $ p f
+---------------------------------------------------------------------------------------
 data Parser a = Parser ([String] -> [(a, [String])])
 
 instance Functor (Parser) where
@@ -99,7 +114,10 @@ parseNoun = word "spaghetti" Spaghetti |||
             word "cabinet" Cabinet |||
             word "sauce" Sauce |||
             word "cheese" Cheese |||
-            word "table" Table
+            word "table" Table |||
+            word "me" Me |||
+            word "myself" Myself |||
+            word "i" I
 
 parseVerb :: Parser Verb
 parseVerb = word "cook" Cook ||| 
@@ -120,18 +138,39 @@ parsePrep = word "in" In |||
             
 parseAdj :: Parser Adjective
 parseAdj = word "delicious" Delicious ||| 
-            word "tasty" Tasty |||
-            word "good" Good |||
-            word "great" Great |||
-            word "bad" Bad |||
-            word "okay" Okay          
+           word "tasty" Tasty |||
+           word "good" Good |||
+           word "great" Great |||
+           word "bad" Bad |||
+           word "okay" Okay          
             
-parseNVN = do
-           n1 <- parseNoun
+parseArt :: Parser Article
+parseArt = word "a" A |||
+           word "an" An |||
+           word "the" The |||
+           word "some" Some
+            
+parseVN = do
            v <- parseVerb
-           n2 <- parseNoun
-           return $ SFrag n1 v n2
+           n <- parseNoun
+           return $ SFragVN v n
            
 test :: Parser a -> String -> [a]
 test p s = map fst $ runParser p toks
            where toks = lexPrep s
+-------------------------------------------------------------------------------------
+main = do
+       putStrLn $ description initSpag
+       act <- getLine
+       let ans = head $ test parseVN act
+       if ans == SFragVN Cook Spaghetti
+          then do
+               putStrLn "Congratulations, you cooked the spaghetti!"
+               putStrLn "Press enter to cook some more"
+               ans <- getLine
+               main
+          else do
+               putStrLn "I'm afraid you weren't able to cook the spaghetti"
+               putStrLn "Press enter to try again"
+               ans <- getLine
+               main
