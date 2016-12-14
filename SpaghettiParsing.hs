@@ -29,21 +29,25 @@ data MState = SState {cooked :: Bool, seasoned :: Bool, ruined :: Bool} deriving
              
 data WState = WState {sentences :: [SFrag], description :: String, mod :: MState} deriving (Show, Eq)
 
-type Stepper world sent = WState -> SFrag -> WState
+--type Stepper world = WState -> SFrag -> WState
 
 scrubPunct :: String -> String
 scrubPunct sent = [x | x <- sent,  not $ elem x ",.?:;'\"-+=_!@$%&*)("]
 
 lexPrep :: String -> [String]
 lexPrep sent = words $ map toLower $ scrubPunct sent
---------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------
 
 initSpag :: WState
 initSpag = WState [] 
                   "You stand in a kitchen.  On the counter there is a bag of spaghetti.  On the stove there is an empty pot.  On the table there is a plate with a fork on it, yearning for some delicious cooked spaghetti."
                   $ SState False False False
 --buffer
+fragVal :: SFrag -> WState -> WState
+fragVal s = error "type check"
 
+wUpdate :: WState -> WState
+wUpdate w = error "type check"
 --buffer
 
 {-
@@ -62,7 +66,7 @@ vnpnReversal f = "The " ++ nn1 ++ " is " ++ np ++ " the " ++ nn2
                where nn1 = map toLower $ show $ n1 f
                      nn2 = map toLower $ show $ n2 f
                      np = map toLower $ show $ p f
----------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------
 data Parser a = Parser ([String] -> [(a, [String])])
 
 instance Functor (Parser) where
@@ -101,7 +105,7 @@ word w v = tok (\s -> if s == w then Just v else Nothing)
 end :: Parser ()
 end = Parser $ \toks ->
                 if toks == [] then [((),[])] else []
-
+----------------------------------------------------------------------------------------------------
 parseNoun :: Parser Noun
 parseNoun = word "spaghetti" Spaghetti ||| 
             word "plate" Plate |||
@@ -149,7 +153,7 @@ parseArt = word "a" A |||
            word "an" An |||
            word "the" The |||
            word "some" Some
-            
+----------------------------------------------------------------------------------------------------            
 parseVN = do
            v <- parseVerb
            n <- parseNoun
@@ -158,7 +162,7 @@ parseVN = do
 test :: Parser a -> String -> [a]
 test p s = map fst $ runParser p toks
            where toks = lexPrep s
--------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------
 main = do
        putStrLn $ description initSpag
        act <- getLine
